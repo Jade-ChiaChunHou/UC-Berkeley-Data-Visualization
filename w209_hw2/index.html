@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Jade Assignment1-2</title>
+    <link rel="stylesheet" href="./css/main.css" />
+    <h1>W209 Assignment 1, Part 2 (Jade Chia-Chun Hou)</h1>
+    <div class="description">
+      <h2>Topic 1: Daily Step Records<h2>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th colspan="2">Problem Abstraction</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>What</td>
+          <td>
+            Data: My daily step records from Aug to Sep 2020.<br>
+            Dataset type: Numerical Table in csv file.
+          </td>
+        </tr>
+        <tr>
+          <td>Why</td>
+          <td>1. Visualize the steps that I took per day to track my lifestyle. <br>
+              2. Remind me to walk and excerise more.<br>
+              <strong> 3. Version 2 could know the step distribution of each day.</strong>
+          </td>
+        </tr>
+        <tr>
+          <td>How</td>
+          <td>1. Use bar plot to see the distribution of my daliy steps.<br>
+              <strong> 2. Version 2 in the "All day" mode it can mouseover to see the detail steps and time of each day.<strong><br>
+              <strong> 3. Version 2 click on "Morning", "Evening" or "Night" bottom could know my step in the specific time.<strong>
+          </td>
+        </tr>
+        <tr>
+          <td>Insight 1</td>
+          <td>My daliy average step is 7,000 steps which is much behind my goal 8,000 step/day. <br>
+              This remind me to walk more.</td>
+        </tr>
+        <tr>
+          <td>Insight 2</td>
+          <td>I miss some of the data in the weekend because I like to wear another watch when hanging with my friends.</td>
+        </tr>
+        <tr>
+          <td>Insight 3</td>
+          <td>The step varies a lot in different days, so I would to have a more regular exercise in next month.</td>
+        </tr>
+        <tr>
+          <td>Insight 4</td>
+          <td><strong>In version 2, I can visualize that most of the steps are at night becuase I can have time to exercise after the work. In the morning, I usually coding and have meetings, so the step is relatively low.</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <br>
+    <br>
+    <br>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <button onclick="window.location.reload();">All Day</button>
+    <button onclick="update('Morning')">Morning</button>
+    <button onclick="update('Evening')">Evening</button>
+    <button onclick="update('Night')">Night</button>
+    <br>
+    <br>
+    <div id="my_dataviz"></div>
+
+
+    <div class="chart">
+      <div class="description">
+        <h2>Topic 2: Word Cloud of me<h2>
+      </div>
+      <p>Note: This one is the same as assignment 1 - part 1</p>
+      <table>
+        <thead>
+          <tr>
+            <th colspan="2">Problem Abstraction</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>What</td>
+            <td>
+              Data: Words about me<br>
+              Dataset type: Word List
+            </td>
+          </tr>
+          <tr>
+            <td>Why</td>
+            <td>Visualize the importantness words about me which reflex by the word size.</td>
+          </tr>
+          <tr>
+            <td>How</td>
+            <td>Use word cloud to visualize the word list with different word size that reflex importantness to me.</td>
+          </tr>
+          <tr>
+            <td>Insight 1</td>
+            <td>My research interest is in data science, being a MIDS staudent is a one the happiness thing to me.</td>
+          </tr>
+          <tr>
+            <td>Insight 2</td>
+            <td>I am recently a data engineering in Micron, and I really enjoy my job.</td>
+          </tr>
+          <tr>
+            <td>Insight 3</td>
+            <td>I like animals, especially cats. I would like to have a cat in the future. <br>
+              Seal is another animal that I love, I want to see them in the wild. </td>
+          </tr>
+          <tr>
+            <td>Insight 4</td>
+            <td>I am a trader, I like to trade options in Taiwan stock market.</td>
+          </tr>
+          <tr>
+            <td>Insight 5</td>
+            <td>I enjoy running and cycling in the weekend.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div id="chart"></div>
+      <div class="chart-footer">
+        <div id="my_dataviz2"  width="800" height="800"></div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+    <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="./js/main.js"></script>
+  </body>
+</html>

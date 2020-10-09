@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      body {
+        margin: 30px;
+        font-family: sans-serif;
+      }
+
+      .description {
+        max-width: 800px;
+      }
+
+      th {
+        background: #dfdfdf;
+        font-weight: bold;
+      }
+
+      td,th {
+        border: 1px solid transparent;
+        height: 30px;
+      }
+
+      tr:nth-child(even)  td {
+        background: #f1f1f1;
+      }
+      tr:nth-child(odd) td {
+        background: #fefefe;
+      }
+
+      td {
+        padding: 0 10px;
+        background: #fafafa;
+        text-align: left;
+      }
+
+      .chart-footer {
+        font-style: italic;
+        font-size: 10pt;
+        color: #aaa;
+      }
+    </style>
+    <title>Jade Assignment1-2</title>
+    <h1>W209 Assignment 1, Part 2 (Jade Chia-Chun Hou)</h1>
+    <div class="description">
+      <h2>Topic 1: Daily Step Records<h2>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th colspan="2">Problem Abstraction</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>What</td>
+          <td>
+            Data: My daily step records from Aug to Sep 2020.<br>
+            Dataset type: Numerical Table in csv file.
+          </td>
+        </tr>
+        <tr>
+          <td>Why</td>
+          <td>1. Visualize the steps that I took per day to track my lifestyle. <br>
+              2. Remind me to walk and excerise more.<br>
+              <strong> 3. Version 2 could know the step distribution of each day.</strong>
+          </td>
+        </tr>
+        <tr>
+          <td>How</td>
+          <td>1. Use bar plot to see the distribution of my daliy steps.<br>
+              <strong> 2. Version 2 in the "All day" mode it can mouseover to see the detail steps and time of each day.<strong><br>
+              <strong> 3. Version 2 click on "Morning", "Evening" or "Night" bottom could know my step in the specific time.<strong>
+          </td>
+        </tr>
+        <tr>
+          <td>Insight 1</td>
+          <td>My daliy average step is 7,000 steps which is much behind my goal 8,000 step/day. <br>
+              This remind me to walk more.</td>
+        </tr>
+        <tr>
+          <td>Insight 2</td>
+          <td>I miss some of the data in the weekend because I like to wear another watch when hanging with my friends.</td>
+        </tr>
+        <tr>
+          <td>Insight 3</td>
+          <td>The step varies a lot in different days, so I would to have a more regular exercise in next month.</td>
+        </tr>
+        <tr>
+          <td>Insight 4</td>
+          <td><strong>In version 2, I can visualize that most of the steps are at night becuase I can have time to exercise after the work. In the morning, I usually coding and have meetings, so the step is relatively low.</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <br>
+    <br>
+    <br>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+    <button onclick="window.location.reload();">All Day</button>
+    <button onclick="update('Morning')">Morning</button>
+    <button onclick="update('Evening')">Evening</button>
+    <button onclick="update('Night')">Night</button>
+    <br>
+    <br>
+    <div id="my_dataviz"></div>
+
+
+    <div class="chart">
+      <div class="description">
+        <h2>Topic 2: Word Cloud of me<h2>
+      </div>
+      <p>Note: This one is the same as assignment 1 - part 1</p>
+      <table>
+        <thead>
+          <tr>
+            <th colspan="2">Problem Abstraction</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>What</td>
+            <td>
+              Data: Words about me<br>
+              Dataset type: Word List
+            </td>
+          </tr>
+          <tr>
+            <td>Why</td>
+            <td>Visualize the importantness words about me which reflex by the word size.</td>
+          </tr>
+          <tr>
+            <td>How</td>
+            <td>Use word cloud to visualize the word list with different word size that reflex importantness to me.</td>
+          </tr>
+          <tr>
+            <td>Insight 1</td>
+            <td>My research interest is in data science, being a MIDS staudent is a one the happiness thing to me.</td>
+          </tr>
+          <tr>
+            <td>Insight 2</td>
+            <td>I am recently a data engineering in Micron, and I really enjoy my job.</td>
+          </tr>
+          <tr>
+            <td>Insight 3</td>
+            <td>I like animals, especially cats. I would like to have a cat in the future. <br>
+              Seal is another animal that I love, I want to see them in the wild. </td>
+          </tr>
+          <tr>
+            <td>Insight 4</td>
+            <td>I am a trader, I like to trade options in Taiwan stock market.</td>
+          </tr>
+          <tr>
+            <td>Insight 5</td>
+            <td>I enjoy running and cycling in the weekend.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div id="chart"></div>
+      <div class="chart-footer">
+        <div id="my_dataviz2"  width="800" height="800"></div>
+      </div>
+    </div>
+
+    <script>
+      // set the dimensions and margins of the graph
+      var margin = {top: 10, right: 30, bottom: 20, left: 50},
+          width = 2000 - margin.left - margin.right,
+          height = 400 - margin.top - margin.bottom;
+
+
+      // append the svg object to the body of the page
+      var svg = d3.select("#my_dataviz")
+        .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+      // Parse the Data
+      d3.csv("./data/step_record2.csv", function(data) {
+
+        // List of subgroups = header of the csv files = soil condition here
+        var subgroups = data.columns.slice(1)
+        console.log(subgroups)
+        // List of groups = species here = value of the first column called group -> I show them on the X axis
+        var groups = d3.map(data, function(d){return(d.Date)}).keys()
+        console.log(groups)
+        // Add X axis
+        var x = d3.scaleBand()
+            .domain(groups)
+            .range([0, width])
+            .padding([0.2])
+        svg.append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x).tickSizeOuter(0));
+
+        // Add Y axis
+        var y = d3.scaleLinear()
+          .domain([0, 20000])
+          .range([ height, 0 ]);
+        svg.append("g")
+          .call(d3.axisLeft(y));
+
+        // color palette = one color per subgroup
+        var color = d3.scaleOrdinal()
+          .domain(subgroups)
+          .range(['#C7EFCF','#F9E79F','#ABB2B9 '])
+
+        //stack the data? --> stack per subgroup
+        var stackedData = d3.stack()
+          .keys(subgroups)
+          (data)
+
+
+
+
+        // ----------------
+        // Create a tooltip
+        // ----------------
+        var tooltip = d3.select("#my_dataviz")
+          .append("div")
+          .style("opacity", 0)
+          .attr("class", "tooltip")
+          .style("background-color", "white")
+          .style("border", "solid")
+          .style("border-width", "1px")
+          .style("border-radius", "5px")
+          .style("padding", "10px")
+
+        // Three function that change the tooltip when user hover / move / leave a cell
+        var mouseover = function(d) {
+          var subgroupName = d3.select(this.parentNode).datum().key;
+          var subgroupValue = d.data[subgroupName];
+          tooltip
+              .html("subgroup: " + subgroupName + "<br>" + "Value: " + subgroupValue)
+              .style("opacity", 1)
+        }
+        var mousemove = function(d) {
+          tooltip
+            .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+            .style("top", (d3.mouse(this)[1]) + "px")
+        }
+        var mouseleave = function(d) {
+          tooltip
+            .style("opacity", 0)
+        }
+
+
+
+
+        // Show the bars
+        svg.append("g")
+          .selectAll("g")
+          // Enter in the stack data = loop key per key = group per group
+          .data(stackedData)
+          .enter().append("g")
+            .attr("fill", function(d) { return color(d.key); })
+            .selectAll("rect")
+            // enter a second time = loop subgroup per subgroup to add all rectangles
+            .data(function(d) { return d; })
+            .enter().append("rect")
+              .attr("x", function(d) { return x(d.data.Date); })
+              .attr("y", function(d) { return y(d[1]); })
+              .attr("height", function(d) { return y(d[0]) - y(d[1]); })
+              .attr("width",x.bandwidth())
+              .attr("stroke", "grey")
+            .on("mouseover", mouseover)
+            .on("mousemove", mousemove)
+            .on("mouseleave", mouseleave)
+
+      })
+
+      // variable plot
+      // A function that create / update the plot for a given variable:
+      function update(selectedVar) {
+        d3.selectAll("svg").remove();
+        // append the svg object to the body of the page
+        var svg = d3.select("#my_dataviz")
+          .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+            .attr("transform",
+                  "translate(" + margin.left + "," + margin.top + ")");
+
+        // Initialize the X axis
+        var x = d3.scaleBand()
+          .range([ 0, width ])
+          .padding(0.2);
+        var xAxis = svg.append("g")
+          .attr("transform", "translate(0," + height + ")")
+
+        // Initialize the Y axis
+        var y = d3.scaleLinear()
+          .range([ height, 0]);
+        var yAxis = svg.append("g")
+          .attr("class", "myYaxis")
+
+        // Parse the Data
+        d3.csv("./data/step_record2.csv", function(data) {
+
+          // X axis
+          x.domain(data.map(function(d) { return d.Date; }))
+          xAxis.transition().duration(1000).call(d3.axisBottom(x))
+
+          // Add Y axis
+          y.domain([0, d3.max(data, function(d) { return +d[selectedVar] }) ]);
+          yAxis.transition().duration(1000).call(d3.axisLeft(y));
+
+          // variable u: map data to existing bars
+          var u = svg.selectAll("rect")
+            .data(data)
+
+          // update bars
+          u
+            .enter()
+            .append("rect")
+            .merge(u)
+            .transition()
+            .duration(1000)
+              .attr("x", function(d) { return x(d.Date); })
+              .attr("y", function(d) { return y(d[selectedVar]); })
+              .attr("width", x.bandwidth())
+              .attr("height", function(d) { return height - y(d[selectedVar]); })
+              .attr("fill", "#69b3a2")
+        })
+
+      }
+
+
+
+      // word cloud
+      // https://www.d3-graph-gallery.com/wordcloud.html
+      // List of words
+      var myWords = [{word: "Data Science", size: "70"}, {word: "MIDS", size: "50"},
+                     {word: "Python", size: "100"}, {word: "R", size: "50"}, {word: "SQL", size: "60"},
+                     {word: "Hadoop", size: "60"}, {word: "Spark", size: "60"},
+                     {word: "Machine Learning", size: "35"},
+                     {word: "Micron", size: "80"}, {word: "Data Engineer", size: "60"},
+                     {word: "Running", size: "30"}, {word: "Cycling", size: "40"},
+                     {word: "Cat", size: "88"}, {word: "Seal", size: "108"},
+                     {word: "Stock", size: "58"}, {word: "Option", size: "128"}];
+
+      // set the dimensions and margins of the graph
+      var margin2 = {top: 10, right: 10, bottom: 10, left: 10},
+          width2 = 800 - margin.left - margin.right,
+          height2 = 800 - margin.top - margin.bottom;
+
+      // append the svg object to the body of the page
+      var svg2 = d3.select("#my_dataviz2").append("svg")
+          .attr("width", width2 + margin2.left + margin2.right)
+          .attr("height", height2 + margin2.top + margin2.bottom)
+        .append("g")
+          .attr("transform",
+                "translate(" + margin2.left + "," + margin2.top + ")");
+
+      // Constructs a new cloud layout instance. It run an algorithm to find the position of words that suits your requirements
+      // Wordcloud features that are different from one word to the other must be here
+      var layout = d3.layout.cloud()
+        .size([width2, height2])
+        .words(myWords.map(function(d) { return {text: d.word, size:d.size}; }))
+        .padding(5)        //space between words
+        .rotate(function() { return ~~(Math.random() * 2) * 90; })
+        .fontSize(function(d) { return d.size; })      // font size of words
+        .on("end", draw);
+      layout.start();
+
+      // This function takes the output of 'layout' above and draw the words
+      // Wordcloud features that are THE SAME from one word to the other can be here
+      function draw(words) {
+        svg2
+          .append("g")
+            .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+            .selectAll("text")
+              .data(words)
+            .enter().append("text")
+              .style("font-size", function(d) { return d.size; })
+              .style("fill", "#69b3a2")
+              .attr("text-anchor", "middle")
+              .style("font-family", "Impact")
+              .attr("transform", function(d) {
+                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+              })
+              .text(function(d) { return d.text; });
+      }
+
+    </script>
+
+    <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+  </body>
+</html>
