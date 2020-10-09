@@ -2,3 +2,6 @@
 
 ## HW1: 
 > https://people.ischool.berkeley.edu/~chiachunhou/hw1/
+
+## HW2:
+> https://people.ischool.berkeley.edu/~chiachunhou/w209/
